@@ -6,7 +6,7 @@ import com.lhpdesenvolvimentos.jobfast.job.domain.exception.ApiUnavailableExcept
 import com.lhpdesenvolvimentos.jobfast.job.domain.exception.NoJobException;
 import com.lhpdesenvolvimentos.jobfast.job.domain.model.Job;
 import com.lhpdesenvolvimentos.jobfast.job.domain.repository.JobRepository;
-import org.slf4j.Logger;
+import com.lhpdesenvolvimentos.jobfast.job.infrastructure.adapters.HimalayasClient;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
@@ -15,29 +15,19 @@ import java.util.List;
 @Service
 public class FindJobService {
 
-    private final RestClient himalayasRestClient;
     private final JobMapper jobMapper;
     private final JobRepository jobRepository;
+    private final HimalayasClient himalayasClient;
 
-    public FindJobService(RestClient himalayasRestClient, JobMapper jobMapper, JobRepository jobRepository) {
-        this.himalayasRestClient = himalayasRestClient;
+    public FindJobService(HimalayasClient himalayasClient, JobMapper jobMapper, JobRepository jobRepository) {
+        this.himalayasClient = himalayasClient;
         this.jobMapper = jobMapper;
         this.jobRepository = jobRepository;
     }
 
     public HimalayasResponse fetchJobs(int limit) {
-        HimalayasResponse himalayasResponse =  himalayasRestClient.get()
-                .uri("/jobs/api?limit=" + limit)
-                .retrieve()
-                .body(HimalayasResponse.class);
 
-        if(himalayasResponse == null ) {
-            throw new ApiUnavailableException("No response received from the Himalayas API");
-        }
-
-        if(himalayasResponse.jobs() == null || himalayasResponse.jobs().isEmpty()) {
-            throw new RuntimeException("No jobs found in the Himalayas API response");
-        }
+        HimalayasResponse himalayasResponse =  himalayasClient.callHimalayasApi(limit);
 
         List<Job> jobs = jobMapper.toJobEntityList(himalayasResponse.jobs());
         jobRepository.saveAllAndFlush(jobs);
