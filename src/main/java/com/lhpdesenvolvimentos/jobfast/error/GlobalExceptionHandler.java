@@ -8,8 +8,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.validation.FieldError;
+
+import java.util.Map;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.Instant;
@@ -50,6 +56,24 @@ public class GlobalExceptionHandler {
                 ex.getMessage(),
                 req.getRequestURI());
         return ResponseEntity.status(HttpStatus.UNPROCESSABLE_CONTENT).body(body);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, Object>> handleValidation(MethodArgumentNotValidException ex, HttpServletRequest req) {
+        List<Map<String, String>> errors = ex.getBindingResult().getFieldErrors().stream()
+                .map(fe -> Map.of("field", fe.getField(), "message", fe.getDefaultMessage()))
+                .collect(Collectors.toList());
+
+        Map<String, Object> body = Map.of(
+                "timestamp", Instant.now(),
+                "status", HttpStatus.BAD_REQUEST.value(),
+                "error", HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                "message", "Validation failed",
+                "path", req.getRequestURI(),
+                "errors", errors
+        );
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
     }
 
     // Catch-all for unexpected exceptions

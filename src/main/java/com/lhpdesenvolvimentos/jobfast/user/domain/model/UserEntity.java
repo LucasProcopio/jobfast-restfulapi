@@ -5,7 +5,8 @@ import jakarta.persistence.*;
 import java.time.Instant;
 
 @Entity
-public class User {
+@Table(name = "users")
+public class UserEntity {
     @Id @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
     @Column(unique = true, nullable = false)
@@ -16,6 +17,13 @@ public class User {
     private boolean enabled = false;
     private Instant createdAt;
     private Instant updatedAt;
+
+    public UserEntity(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
+
+    protected UserEntity() {}
 
     @PrePersist
     public void onCreate(){
