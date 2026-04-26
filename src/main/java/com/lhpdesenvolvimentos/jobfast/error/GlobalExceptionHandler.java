@@ -1,24 +1,24 @@
 package com.lhpdesenvolvimentos.jobfast.error;
 
-import com.lhpdesenvolvimentos.jobfast.job.application.dto.ErrorResponse;
-import com.lhpdesenvolvimentos.jobfast.job.domain.exception.ApiUnavailableException;
-import com.lhpdesenvolvimentos.jobfast.job.domain.exception.NoJobException;
-import com.lhpdesenvolvimentos.jobfast.job.domain.exception.DomainException;
+import java.time.Instant;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.validation.FieldError;
 
-import java.util.Map;
-import java.util.List;
-import java.util.stream.Collectors;
+import com.lhpdesenvolvimentos.jobfast.job.application.dto.ErrorResponse;
+import com.lhpdesenvolvimentos.jobfast.job.domain.exception.ApiUnavailableException;
+import com.lhpdesenvolvimentos.jobfast.job.domain.exception.DomainException;
+import com.lhpdesenvolvimentos.jobfast.job.domain.exception.NoJobException;
 
 import jakarta.servlet.http.HttpServletRequest;
-import java.time.Instant;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {

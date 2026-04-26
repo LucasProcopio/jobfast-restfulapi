@@ -1,14 +1,15 @@
 package com.lhpdesenvolvimentos.jobfast.job.infrastructure.adapters;
 
-import com.lhpdesenvolvimentos.jobfast.job.application.dto.HimalayasResponse;
-import com.lhpdesenvolvimentos.jobfast.job.domain.exception.ApiUnavailableException;
-import com.lhpdesenvolvimentos.jobfast.job.domain.exception.NoJobException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestClientResponseException;
+
+import com.lhpdesenvolvimentos.jobfast.job.application.dto.HimalayasResponse;
+import com.lhpdesenvolvimentos.jobfast.job.domain.exception.ApiUnavailableException;
+import com.lhpdesenvolvimentos.jobfast.job.domain.exception.NoJobException;
 
 @Component
 public class HimalayasClient {
@@ -20,6 +21,7 @@ public class HimalayasClient {
     }
 
     public HimalayasResponse callHimalayasApi(int limit) {
+        log.info("Calling Himalayas API with limit {}", limit);
         try {
             return  himalayasRestClient.get()
                     .uri("/jobs/api?limit=" + limit)

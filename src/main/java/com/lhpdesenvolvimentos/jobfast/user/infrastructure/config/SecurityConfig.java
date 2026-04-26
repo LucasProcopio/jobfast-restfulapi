@@ -12,7 +12,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityContig {
+public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -27,7 +27,8 @@ public class SecurityContig {
                                 "/swagger-ui/index.html",
                                 "/swagger-resources/**",
                                 "/webjars/**",
-                                "/v1/api/auth/**"
+                                "/v1/api/auth/**",
+                                "/fetch-external-jobs"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
