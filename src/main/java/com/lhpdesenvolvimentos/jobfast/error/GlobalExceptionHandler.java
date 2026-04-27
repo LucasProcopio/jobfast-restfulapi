@@ -17,6 +17,7 @@ import com.lhpdesenvolvimentos.jobfast.job.application.dto.ErrorResponse;
 import com.lhpdesenvolvimentos.jobfast.job.domain.exception.ApiUnavailableException;
 import com.lhpdesenvolvimentos.jobfast.job.domain.exception.DomainException;
 import com.lhpdesenvolvimentos.jobfast.job.domain.exception.NoJobException;
+import com.lhpdesenvolvimentos.jobfast.user.domain.error.UserVerificationException;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -76,6 +77,17 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
     }
 
+    @ExceptionHandler(UserVerificationException.class)
+    public ResponseEntity<ErrorResponse> handleUserVerification(UserVerificationException ex, HttpServletRequest req) {
+        log.error("User verification error: {}", ex.getMessage(), ex);
+        ErrorResponse body = new ErrorResponse(Instant.now(),
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                ex.getMessage(),
+                req.getRequestURI());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+    }
+    
     // Catch-all for unexpected exceptions
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleAny(Exception ex, HttpServletRequest req) {

@@ -1,14 +1,24 @@
 package com.lhpdesenvolvimentos.jobfast.job.domain.model;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import org.hibernate.annotations.JdbcTypeCode;
-
 import java.time.LocalDateTime;
 import java.util.Date;
 
+import org.hibernate.annotations.JdbcTypeCode;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
+
 @Entity
 @Table(name = "jobs")
+@Data 
 public class Job {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -58,29 +68,5 @@ public class Job {
     @PreUpdate
     protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
-    }
-
-    // Setters
-    public void setTitle(String title) { this.title = title; }
-
-    public void setCompanyName(String companyName) { this.companyName = companyName; }
-
-    public void setDescription(String description) { this.description = description ; }
-
-    public void setApplicationLink(String applicationLink) { this.applicationLink = applicationLink; }
-
-    public void setJobPostedAt(Date jobPostedAt) { this.jobPostedAt = jobPostedAt; }
-
-    public void setJobType(String jobType) { this.jobType = jobType; }
-
-    public void setLocation(String location) { this.location = location; }
-
-    public void setMaxSalary(int maxSalary) { this.maxSalary = maxSalary; }
-
-    public void setSeniority(String seniority) { this.seniority = seniority; }
-
-    // Getters
-    public String getId() {
-        return id;
     }
 }

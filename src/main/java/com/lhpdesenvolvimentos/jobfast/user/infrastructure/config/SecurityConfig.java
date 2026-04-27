@@ -28,7 +28,8 @@ public class SecurityConfig {
                                 "/swagger-resources/**",
                                 "/webjars/**",
                                 "/v1/api/auth/**",
-                                "/fetch-external-jobs"
+                                "/fetch-external-jobs",
+                                "/v1/api/verify"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
