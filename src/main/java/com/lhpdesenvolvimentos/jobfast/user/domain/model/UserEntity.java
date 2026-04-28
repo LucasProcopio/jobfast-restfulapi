@@ -44,4 +44,8 @@ public class UserEntity {
     public void onUpdate() {
         this.updatedAt = Instant.now();
     }
+
+    public boolean isEmpty() {
+        return this.id == null || this.id.isBlank();
+    }
 }
