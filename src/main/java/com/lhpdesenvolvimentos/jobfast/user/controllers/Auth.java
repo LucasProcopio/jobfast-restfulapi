@@ -1,6 +1,5 @@
 package com.lhpdesenvolvimentos.jobfast.user.controllers;
 
-import org.hibernate.mapping.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
