@@ -11,7 +11,6 @@ public record AboutRequest(
     @NotBlank(message = "City name is required") String cityName,
     @NotBlank(message = "State is required") String state,
     boolean disability,
-    @NotBlank(message= "Gender is required")
     @NotNull(message = "Gender number is required") 
     @Min(value = 0, message = "Invalid gender number") 
     @Max(value = 4, message = "Invalid gender number") // 0 = Male, 1 = Female, 2 = Other, 3 = Prefer not to say, 4 = Non-binary

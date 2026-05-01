@@ -1,3 +1,4 @@
+// Java
 package com.lhpdesenvolvimentos.jobfast.user.infrastructure.config;
 
 import org.springframework.context.annotation.Bean;
@@ -9,18 +10,15 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        // Configure security: allow Swagger/OpenAPI and auth endpoints, protect the rest
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/v3/api-docs/**",
+                        .requestMatchers("/v3/api-docs/**",
                                 "/v3/api-docs.yaml",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
@@ -29,11 +27,12 @@ public class SecurityConfig {
                                 "/webjars/**",
                                 "/v1/api/auth/**",
                                 "/fetch-external-jobs",
-                                "/v1/api/verify"
-                        ).permitAll()
+                                "/v1/api/verify").permitAll()
+                        .requestMatchers(org.springframework.http.HttpMethod.OPTIONS).permitAll() // preflight
                         .anyRequest().authenticated()
                 )
-                .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> {})); // <- habilita validação JWT
 
         return http.build();
     }

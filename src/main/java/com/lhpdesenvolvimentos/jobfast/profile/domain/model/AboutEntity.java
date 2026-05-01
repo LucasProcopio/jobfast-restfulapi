@@ -1,26 +1,28 @@
 package com.lhpdesenvolvimentos.jobfast.profile.domain.model;
 
+import java.time.Instant;
+
+import com.lhpdesenvolvimentos.jobfast.user.domain.model.UserEntity;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
+import jakarta.persistence.Table;
 import lombok.Data;
-
-import java.time.Instant;
-
-import com.lhpdesenvolvimentos.jobfast.user.domain.model.UserEntity;
 
 @Entity
 @Data
 @Table(name = "about")
 public class AboutEntity {
     @Id
+    @GeneratedValue
     private Long id;
 
     @Enumerated(EnumType.STRING)
@@ -67,6 +69,7 @@ public class AboutEntity {
         this.state = b.state;
         this.disability = b.disability;
         this.gender = b.gender;
+        this.user = b.user;
     }
 
     public static Builder builder() { return new Builder(); }
@@ -78,6 +81,7 @@ public class AboutEntity {
         private String state;
         private boolean disability;
         private Gender gender;
+        private UserEntity user;
 
         public Builder zipCode(String zipCode) { this.zipCode = zipCode; return this; }
         public Builder address(String address) { this.address = address; return this; }
@@ -85,6 +89,7 @@ public class AboutEntity {
         public Builder state(String state) { this.state = state; return this; }
         public Builder disability(boolean disability) { this.disability = disability; return this; }
         public Builder gender(Gender gender) { this.gender = gender; return this; }
+        public Builder user(UserEntity user) { this.user = user; return this; }
 
         public AboutEntity build() { return new AboutEntity(this); }
     }
