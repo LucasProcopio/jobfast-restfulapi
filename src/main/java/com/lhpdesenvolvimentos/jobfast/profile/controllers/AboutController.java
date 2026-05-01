@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lhpdesenvolvimentos.jobfast.profile.application.dto.AboutRequest;
 import com.lhpdesenvolvimentos.jobfast.profile.application.dto.AboutResponse;
 import com.lhpdesenvolvimentos.jobfast.profile.application.service.AboutService;
+import com.lhpdesenvolvimentos.jobfast.profile.domain.error.AboutException;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -34,7 +35,7 @@ public class AboutController {
     public ResponseEntity<AboutResponse> about(
         @AuthenticationPrincipal(expression = "claims['sub']") String userId,
         @Valid
-        @RequestBody AboutRequest req) {
+        @RequestBody AboutRequest req) throws AboutException {
         log.info("Received about update request for userId: {}", userId);
         AboutResponse response = aboutService.updateAbout(userId, req);
         return ResponseEntity.ok().body(response);

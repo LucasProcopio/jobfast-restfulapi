@@ -1,6 +1,6 @@
 // Java
 // Opção A: criar JwtDecoder a partir do caminho do PEM (usa jwt.public-key-path já presente)
-package com.lhpdesenvolvimentos.jobfast.user.infrastructure.config;
+package com.lhpdesenvolvimentos.jobfast.config;
 
 import java.nio.file.Files;
 import java.nio.file.Path;

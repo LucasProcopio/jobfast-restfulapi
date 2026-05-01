@@ -17,6 +17,7 @@ import com.lhpdesenvolvimentos.jobfast.job.application.dto.ErrorResponse;
 import com.lhpdesenvolvimentos.jobfast.job.domain.exception.ApiUnavailableException;
 import com.lhpdesenvolvimentos.jobfast.job.domain.exception.DomainException;
 import com.lhpdesenvolvimentos.jobfast.job.domain.exception.NoJobException;
+import com.lhpdesenvolvimentos.jobfast.profile.domain.error.AboutException;
 import com.lhpdesenvolvimentos.jobfast.user.domain.error.UserVerificationException;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -59,6 +60,17 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNPROCESSABLE_CONTENT).body(body);
     }
 
+    @ExceptionHandler(AboutException.class)
+    public ResponseEntity<ErrorResponse> handleAbout(AboutException ex, HttpServletRequest req) {
+        log.warn("About error: {}", ex.getMessage(), ex);
+        ErrorResponse body = new ErrorResponse(Instant.now(),
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                ex.getMessage(),
+                req.getRequestURI());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+    }
+    
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidation(MethodArgumentNotValidException ex, HttpServletRequest req) {
         List<Map<String, String>> errors = ex.getBindingResult().getFieldErrors().stream()

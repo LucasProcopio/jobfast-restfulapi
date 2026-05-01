@@ -1,4 +1,4 @@
-package com.lhpdesenvolvimentos.jobfast.job.infrastructure.config;
+package com.lhpdesenvolvimentos.jobfast.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

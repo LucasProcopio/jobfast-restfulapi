@@ -2,6 +2,7 @@ package com.lhpdesenvolvimentos.jobfast.user.controllers;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,11 +16,12 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/v1/public/api/verification")
 @Tag(name = "Verification", description = "Endpoints para verificação de email")
 public class VerificationController {
     private final VerificationService verificationService;
 
-    @GetMapping("/v1/api/verify")
+    @GetMapping("/")
     @Operation(summary = "Verificar email", description = "Endpoint para verificar o email do usuário usando um token de verificação.", parameters = {
         @Parameter(name = "token", description = "Token de verificação enviado por email", required = true)
     })

@@ -1,4 +1,4 @@
-package com.lhpdesenvolvimentos.jobfast.user.infrastructure.config;
+package com.lhpdesenvolvimentos.jobfast.config;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;

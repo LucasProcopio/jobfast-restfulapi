@@ -1,6 +1,7 @@
 package com.lhpdesenvolvimentos.jobfast.job.controllers;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,6 +14,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 
 @RestController
+@RequestMapping("/v1/public/api/jobs")
 @Tag(name = "External Jobs", description = "Fetch jobs from external sources")
 public class FetchExternalJobs {
     private final FindJobService findJobService;
@@ -21,7 +23,7 @@ public class FetchExternalJobs {
         this.findJobService = findJobService;
     }
 
-    @GetMapping("/fetch-external-jobs")
+    @GetMapping("/")
     @Operation(
         summary = "Fetch external jobs",
         description = "Fetches job listings from the Himalayas API"

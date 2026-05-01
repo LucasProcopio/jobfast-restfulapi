@@ -1,5 +1,5 @@
 // Java
-package com.lhpdesenvolvimentos.jobfast.user.infrastructure.config;
+package com.lhpdesenvolvimentos.jobfast.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,9 +25,7 @@ public class SecurityConfig {
                                 "/swagger-ui/index.html",
                                 "/swagger-resources/**",
                                 "/webjars/**",
-                                "/v1/api/auth/**",
-                                "/fetch-external-jobs",
-                                "/v1/api/verify").permitAll()
+                                "/v1/public/**").permitAll()
                         .requestMatchers(org.springframework.http.HttpMethod.OPTIONS).permitAll() // preflight
                         .anyRequest().authenticated()
                 )
