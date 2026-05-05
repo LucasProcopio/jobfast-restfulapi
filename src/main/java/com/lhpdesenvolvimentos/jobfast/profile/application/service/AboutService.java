@@ -1,5 +1,6 @@
 package com.lhpdesenvolvimentos.jobfast.profile.application.service;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -28,9 +29,23 @@ public class AboutService {
         UserEntity user = userRepository.findById(userId)
             .orElseThrow(() -> new DomainException("User not found"));
        
-         int genderNum = request.genderNum();
+        int genderNum = request.genderNum();
         AboutEntity.Gender gender = getGender(genderNum);
-        AboutEntity about = AboutEntity.builder()
+        // check if about already exists
+        Optional<AboutEntity> existing = aboutRepository.findByUserId(userId);
+        AboutEntity about;
+        
+        // save or update about information
+        if(existing.isPresent()){
+            about = existing.get();
+            about.setZipCode(request.zipCode());
+            about.setAddress(request.address());
+            about.setCityName(request.cityName());
+            about.setState(request.state());
+            about.setDisability(request.disability());
+            about.setGender(gender);
+        } else {
+           about = AboutEntity.builder()
             .user(user)
             .zipCode(request.zipCode())
             .address(request.address())
@@ -39,7 +54,8 @@ public class AboutService {
             .disability(request.disability())
             .gender(gender)
             .build();
-       
+        }
+
         aboutRepository.save(about);
         return new AboutResponse("About information updated successfully");
     }

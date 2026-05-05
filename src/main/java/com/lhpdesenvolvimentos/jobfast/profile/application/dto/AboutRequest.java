@@ -4,9 +4,12 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 public record AboutRequest(
-    @NotBlank(message = "Zip code is required") String zipCode,
+    @NotBlank(message = "Zip code is required") 
+    @Pattern(regexp = "\\d{5}-?\\d{3}", message = "Invalid zip code format") // validate Brazilian CEP format (e.g., 12345-678 or 12345678)
+    String zipCode,
     @NotBlank(message = "Address is required") String address,
     @NotBlank(message = "City name is required") String cityName,
     @NotBlank(message = "State is required") String state,
