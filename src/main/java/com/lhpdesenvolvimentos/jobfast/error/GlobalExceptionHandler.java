@@ -18,6 +18,7 @@ import com.lhpdesenvolvimentos.jobfast.job.domain.exception.ApiUnavailableExcept
 import com.lhpdesenvolvimentos.jobfast.job.domain.exception.DomainException;
 import com.lhpdesenvolvimentos.jobfast.job.domain.exception.NoJobException;
 import com.lhpdesenvolvimentos.jobfast.profile.domain.error.AboutException;
+import com.lhpdesenvolvimentos.jobfast.profile.domain.error.AcademicExperienceException;
 import com.lhpdesenvolvimentos.jobfast.user.domain.error.UserVerificationException;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -63,6 +64,17 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AboutException.class)
     public ResponseEntity<ErrorResponse> handleAbout(AboutException ex, HttpServletRequest req) {
         log.warn("About error: {}", ex.getMessage(), ex);
+        ErrorResponse body = new ErrorResponse(Instant.now(),
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                ex.getMessage(),
+                req.getRequestURI());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+    }
+
+    @ExceptionHandler(AcademicExperienceException.class)
+    public ResponseEntity<ErrorResponse> handleAcademic(AboutException ex, HttpServletRequest req) {
+        log.warn("Academic Experience error: {}", ex.getMessage(), ex);
         ErrorResponse body = new ErrorResponse(Instant.now(),
                 HttpStatus.BAD_REQUEST.value(),
                 HttpStatus.BAD_REQUEST.getReasonPhrase(),

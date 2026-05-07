@@ -1,5 +1,7 @@
 package com.lhpdesenvolvimentos.jobfast.profile.application.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.lhpdesenvolvimentos.jobfast.profile.application.dto.AcademicExperienceRequest;
@@ -14,8 +16,8 @@ public class AcademicExperienceService {
         this.academicExperienceRepository = academicExperienceRepository;
     }
 
-    public AcademicExperienceResponse createAcademicExperience(String userId, AcademicExperienceRequest req) {
-        // implement academic experience creation logic here, e.g. save to database
+    public AcademicExperienceResponse updateAcademicExperience(String userId, List<AcademicExperienceRequest> req) {
+       // implement delete all by user id then insert new list of academic experience
         return new AcademicExperienceResponse("Academic experience created successfully");
     }
 }

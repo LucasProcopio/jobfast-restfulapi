@@ -18,7 +18,7 @@ public record AcademicExperienceRequest(
                 @NotNull(message = "Academic status is required") AcademicStatus status,
                 @NotNull(message = "Academic qualification is required") AcademicQualification academicQualification,
                 @NotNull(message = "Educational level is required") EducationLevel educationLevel,
-                @NotNull(message = "Start date is required") @PastOrPresent LocalDate startDate,
-                @PastOrPresent LocalDate endDate) {
+                @NotNull(message = "Start date is required") @PastOrPresent(message="Start date must not be in the future") LocalDate startDate,
+                @PastOrPresent(message="End date must not be in the future") LocalDate endDate) {
 
 }
