@@ -11,4 +11,5 @@ import com.lhpdesenvolvimentos.jobfast.profile.domain.model.AcedemicExperienceEn
 @Repository
 public interface AcademicExperienceRepository extends JpaRepository<AcedemicExperienceEntity, Long> {
     Optional<List<AcedemicExperienceEntity>> findByUserId(String userId);
+    void deleteByUserId(String userId);
 }

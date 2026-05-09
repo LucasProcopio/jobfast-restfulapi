@@ -9,10 +9,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.lhpdesenvolvimentos.jobfast.job.application.dto.ErrorResponse;
 import com.lhpdesenvolvimentos.jobfast.job.domain.exception.ApiUnavailableException;
 import com.lhpdesenvolvimentos.jobfast.job.domain.exception.DomainException;
@@ -73,7 +75,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(AcademicExperienceException.class)
-    public ResponseEntity<ErrorResponse> handleAcademic(AboutException ex, HttpServletRequest req) {
+    public ResponseEntity<ErrorResponse> handleAcademic(AcademicExperienceException ex, HttpServletRequest req) {
         log.warn("Academic Experience error: {}", ex.getMessage(), ex);
         ErrorResponse body = new ErrorResponse(Instant.now(),
                 HttpStatus.BAD_REQUEST.value(),
@@ -82,9 +84,45 @@ public class GlobalExceptionHandler {
                 req.getRequestURI());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
     }
-    
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponse> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
+            HttpServletRequest req) {
+        String message = "Malformed JSON request";
+        // busca InvalidFormatException
+        Throwable cause = ex.getCause();
+        InvalidFormatException ife = findCause(ex, InvalidFormatException.class);
+        AcademicExperienceException aee = findCause(ex, AcademicExperienceException.class);
+
+        if (aee != null) {
+            message = aee.getMessage();
+        } else if (ife != null) {
+            String field = ife.getPath().stream()
+                    .map(p -> p.getFieldName())
+                    .filter(n -> n != null)
+                    .collect(Collectors.joining("."));
+            String value = String.valueOf(ife.getValue());
+            String target = ife.getTargetType() != null ? ife.getTargetType().getSimpleName() : "target";
+            message = String.format("Invalid value '%s' for field '%s'. Expected type %s", value,
+                    field.isEmpty() ? "<unknown>" : field, target);
+        } else if (cause != null && cause.getMessage() != null) {
+            message = cause.getMessage();
+        } else if (ex.getMessage() != null) {
+            message = ex.getMessage();
+        }
+
+        log.warn("Malformed request: {}", message, ex);
+        ErrorResponse body = new ErrorResponse(Instant.now(),
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                message,
+                req.getRequestURI());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, Object>> handleValidation(MethodArgumentNotValidException ex, HttpServletRequest req) {
+    public ResponseEntity<Map<String, Object>> handleValidation(MethodArgumentNotValidException ex,
+            HttpServletRequest req) {
         List<Map<String, String>> errors = ex.getBindingResult().getFieldErrors().stream()
                 .map(fe -> Map.of("field", fe.getField(), "message", fe.getDefaultMessage()))
                 .collect(Collectors.toList());
@@ -95,8 +133,7 @@ public class GlobalExceptionHandler {
                 "error", HttpStatus.BAD_REQUEST.getReasonPhrase(),
                 "message", "Validation failed",
                 "path", req.getRequestURI(),
-                "errors", errors
-        );
+                "errors", errors);
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
     }
@@ -111,7 +148,7 @@ public class GlobalExceptionHandler {
                 req.getRequestURI());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
     }
-    
+
     // Catch-all for unexpected exceptions
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleAny(Exception ex, HttpServletRequest req) {
@@ -122,5 +159,17 @@ public class GlobalExceptionHandler {
                 "An unexpected error occurred",
                 req.getRequestURI());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T extends Throwable> T findCause(Throwable ex, Class<T> cls) {
+        Throwable current = ex;
+        while (current != null) {
+            if (cls.isInstance(current)) {
+                return (T) current;
+            }
+            current = current.getCause();
+        }
+        return null;
     }
 }

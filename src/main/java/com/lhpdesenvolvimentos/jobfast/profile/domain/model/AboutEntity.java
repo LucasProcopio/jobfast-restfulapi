@@ -61,6 +61,7 @@ public class AboutEntity {
     private void onUpdate() {
         this.updatedAt = Instant.now();
     }
+    
     private AboutEntity() {}
     
     private AboutEntity(Builder b) {

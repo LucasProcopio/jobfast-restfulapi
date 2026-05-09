@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/v1/api/profile")
 @Tag(name = "Profile", description = "Endpoints related to user profile management")
 @Slf4j
+@Validated
 public class AcademicExperienceController {
     private final AcademicExperienceService academicExperienceService;
 
@@ -35,7 +37,7 @@ public class AcademicExperienceController {
     @Operation(summary = "User academic experience", description = "Update user academic experience", security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<AcademicExperienceResponse> postMethodName(
             @AuthenticationPrincipal(expression = "claims['sub']") String userId,
-            @Valid @RequestBody List<AcademicExperienceRequest> request) throws AcademicExperienceException {
+            @RequestBody @Valid List<@Valid AcademicExperienceRequest> request) throws AcademicExperienceException {
         AcademicExperienceResponse response = academicExperienceService.updateAcademicExperience(userId, request);
         return ResponseEntity.ok().body(response);
     }
